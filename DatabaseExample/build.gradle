@@ -1,0 +1,66 @@
+plugins {
+id "net.ltgt.apt-eclipse" version "0.21"
+id "com.github.johnrengelman.shadow" version "5.2.0"
+id "com.diffplug.gradle.spotless" version "3.27.0"
+}
+apply plugin:"application"
+sourceCompatibility='1.8'
+targetCompatibility='1.8'
+version "0.1"
+group "io.hashimati"
+repositories {
+mavenCentral()
+	maven { url "https://jcenter.bintray.com" }
+}
+configurations {
+    // for dependencies that are needed for development only
+    developmentOnly 
+}
+dependencies {
+	
+	annotationProcessor 'org.projectlombok:lombok:1.18.10'
+	annotationProcessor "io.micronaut.data:micronaut-data-processor"
+	annotationProcessor "io.micronaut:micronaut-inject-java"
+	annotationProcessor "io.micronaut:micronaut-validation"
+	annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+	compile 'com.google.googlejavaformat:google-java-format:1.7'
+	compile 'io.micronaut:micronaut-views'
+	compileOnly 'org.projectlombok:lombok:1.18.10'
+	compile group: 'io.projectreactor', name: 'reactor-core', version: '3.3.1.RELEASE'
+	implementation "io.micronaut.configuration:micronaut-jdbc-hikari"
+	implementation "io.micronaut.configuration:micronaut-jdbc-tomcat"
+	implementation "io.micronaut.data:micronaut-data-hibernate-jpa"
+	implementation "io.micronaut:micronaut-http-client"
+	implementation "io.micronaut:micronaut-http-server-netty"
+	implementation "io.micronaut:micronaut-inject"
+	implementation "io.micronaut:micronaut-runtime"
+	implementation "io.micronaut:micronaut-validation"
+	implementation "javax.annotation:javax.annotation-api"
+	implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+	runtime 'org.thymeleaf:thymeleaf:3.0.11.RELEASE'
+	runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
+	runtimeOnly "com.h2database:h2"
+	testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+	testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+	testCompile "io.micronaut.test:micronaut-test-junit5"
+	testCompile "org.junit.jupiter:junit-jupiter-api"
+	testCompile group: 'io.projectreactor', name: 'reactor-test', version: '3.3.1.RELEASE'
+	testRuntime "org.junit.jupiter:junit-jupiter-engine"
+
+	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
+}
+test.classpath += configurations.developmentOnly
+mainClassName = "io.hashimati.databaseexample.Application"
+// use JUnit 5 platform
+test {
+    useJUnitPlatform()
+}
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+    options.compilerArgs.add('-parameters')
+}
+shadowJar {
+    mergeServiceFiles()
+}
+run.classpath += configurations.developmentOnly
+run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')

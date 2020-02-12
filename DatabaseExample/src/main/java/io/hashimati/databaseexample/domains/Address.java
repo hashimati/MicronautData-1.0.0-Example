@@ -20,7 +20,6 @@ import lombok.*;
 @Entity
 @Data
 @EqualsAndHashCode
-@Introspected
 public class Address {
 
     @Id

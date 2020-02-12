@@ -27,7 +27,6 @@ import lombok.*;
 @Data
 @ToString
 @EqualsAndHashCode
-@Introspected
 public class Person {
 
     @javax.persistence.Id

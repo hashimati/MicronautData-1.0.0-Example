@@ -22,7 +22,6 @@ import lombok.*;
 @Entity
 @Data
 @EqualsAndHashCode
-@Introspected
 public class Contacts {
 
     @Id

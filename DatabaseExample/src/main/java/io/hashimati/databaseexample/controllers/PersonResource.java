@@ -12,6 +12,7 @@ import io.hashimati.databaseexample.domains.Person;
 import io.hashimati.databaseexample.repositories.AddressRepository;
 import io.hashimati.databaseexample.repositories.ContactsRepository;
 import io.hashimati.databaseexample.repositories.PersonRepository;
+import io.hashimati.databaseexample.services.PersonService;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 
@@ -20,46 +21,15 @@ import io.micronaut.http.annotation.Get;
  */
 
 @Controller
-@Transactional
 public class PersonResource {
 
     @Inject
-    private PersonRepository personRepository; 
-
-    @Inject 
-    private ContactsRepository contactsRepository; 
-    @Inject
-    private AddressRepository addressRepository; 
-
+    private PersonService personService;
     @Get("/add")
     public Person addPerson()
     {
-        Person person = new Person(); 
-        person.setName("Ahmed");
-        person.setAge(0);
-
-
-        Address myAddress = new Address(); 
-        myAddress.setCountry("Saudi Arabia");
-        myAddress.setCity("Saihat");
-        myAddress.setPerson(person);
-        person.getAddresses().add(addressRepository.save(myAddress)); 
-
-
-      Person result = personRepository.save(person); 
-        Contacts contacts = new Contacts(); 
-
-        contacts.setEmail("Helloworld@gmail.com");
-        contacts.setTelephone("0123123123");
-        contacts.setPerson(result);
-
-        person.setContacts(contactsRepository.save(contacts));
-
-      // person.setContacts( contactsRepository.save(contacts));
-        
-
-
-        return result; 
+       
+        return personService.addPerson(); 
         
 
     }
@@ -67,17 +37,13 @@ public class PersonResource {
     @Get("/all")
     public List<Person> getAll()
     {
-      return personRepository.findAll();
+      return personService.getAll();
     }
 
     @Get("/deleteAll")
     public String deleteAll()
     {
-      addressRepository.deleteAll();
-      contactsRepository.deleteAll();
-      personRepository.deleteAll();
-
-      return "done";  
+      return personService.deleteAll();  
     }
     
 }
